@@ -1,5 +1,5 @@
 ---
-title: "Programming Exercise"
+title: "Bigrams"
 author: "Joshua Merrell"
 date: "April 24, 2018"
 output: html_document
@@ -15,14 +15,25 @@ A bigram is any two adjacent words in the text. A histogram is a kind of graphic
 A well-formed submission will be executable and accompanied by tests. You may do this in any language and use any framework or data structures to read files, build the output, and run tests. The submission should be your own work. Great candidates go above and beyond the problem statement and think about edge cases and failure.
 
 ### Executability
-An R shiny application is available at [https://brantmerrell.shinyapps.io/programming_exercise/](https://brantmerrell.shinyapps.io/programming_exercise/), which allows users to manually upload one txt file at a time and view the resulting histogram of bigrams (an error will be thrown if there are no bigrams). This application can also be run locally by calling runApp() in the R console from the *Programming Exercise* directory provided with this submission.  
+An R shiny application is available at [https://brantmerrell.shinyapps.io/programming_exercise/](https://brantmerrell.shinyapps.io/programming_exercise/), which allows users to manually upload one txt file at a time and view the resulting histogram of bigrams. This application can also be run locally by calling runApp() in the R console from the *Programming Exercise* directory provided with this submission.  
+
+Test list:  
 
 ### Approach
 To catch discrepancies in results and thus reduce error, I have written an R function (bigram.R) and a python function (bigram.py). Both functions process three test files as shown below.
 
+### Issues to Fix
+Review of the histograms generated (my thanks to MD Weight) calls attention to a few issues with the histograms. 
+ * __The sum of the histogram's bars ought to be equal to 1__. This requires a normalization of the data (ie. divide each tally by the total number of bigrams) prior to calling the plot function, similar to a probability of mass distribution.  
+ *   __A key is required for an understandable plot__.  
+  +   __The difficulty__: there are limits to what a histogram can convey when it is supposed to be able to model any text file. For example, when there are ten bigrams in the file, the histogram can assign each one its own place on the X axis, but when there are a thousand, they need to be bucketed somehow.  
+  +   __The solution__: Bucket bigrams according to the percentage with which they occur or their place in the alphabet, and provide a descriptive key for the buckets.  
+ * __Bigrams with a tally of 1 take up unnecessary space__. “When a bigram count falls below the threshold t, the bigram is backed-off to the unigram probability suitably scaled by a back-off weight in order to ensure that all bigram probabilities for a given history sum to one.” - [Bigram Language Models](https://labrosa.ee.columbia.edu/doc/HTKBook21/node132.html).  
+ * __Raw counts create polarized plot data__. Plotting by the log of the counts allows more to be inferred about the shape of the dataset.
+
 ### Test Files
 **data_1**  
-A small text file saturated with bigrams.
+A text file with relatively few unique bigrams.
 ```{r}
 # create vector of five bigrams
 words <- c("and; AND", "or, Or", "if... iF", "1he, 1he", "wh'en, wh'en", "why, why", 
@@ -64,6 +75,7 @@ English words.
 vocab <- readLines("https://github.com/dwyl/english-words/blob/master/words.txt?raw=true")
 # randomly select 10,000
 vocab <- sample(vocab, 10000)
+# create data_3
 writeLines(paste(vocab, collapse = " "), "data_3.txt")
 ```
 
