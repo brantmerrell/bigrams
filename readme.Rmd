@@ -14,13 +14,31 @@ Create an application that can take as input any text file and output a histogra
 A bigram is any two adjacent words in the text. A histogram is a kind of graphical representation of numerical data.
 A well-formed submission will be executable and accompanied by tests. You may do this in any language and use any framework or data structures to read files, build the output, and run tests. The submission should be your own work. Great candidates go above and beyond the problem statement and think about edge cases and failure.
 
-### Executability
-An R shiny application is available at [https://brantmerrell.shinyapps.io/programming_exercise/](https://brantmerrell.shinyapps.io/programming_exercise/), which allows users to manually upload one txt file at a time and view the resulting histogram of bigrams. This application can also be run locally by calling runApp() in the R console from the *Programming Exercise* directory provided with this submission.  
-
-Test list:  
-
 ### Approach
 To catch discrepancies in results and thus reduce error, I have written an R function (bigram.R) and a python function (bigram.py). Both functions process three test files as shown below.
+
+### Executability
+An R shiny application is available at [https://brantmerrell.shinyapps.io/programming_exercise/](https://brantmerrell.shinyapps.io/programming_exercise/), which allows users to manually upload one txt file at a time and view the resulting histogram of bigrams. The shiny application can also be run from the R console:  
+```{r, eval=F}
+library(shiny)
+runApp()
+```
+Additionally, the R and python functions create histograms in a *gallery* directory when called from the bash command line or from their respective terminals:
+```{r, engine="bash", eval=F}
+# Bash sommand line
+Rscript bigram.R <file_name.txt>
+python bigram.py <file_name.txt>
+```
+```{r, eval=F}
+# R terminal
+source("bigram.R")
+bigram("<file_name.txt>")
+```
+```{r, engine="python", eval=F}
+# Python terminal
+from bigram import bigram # import function in python
+bigram("<txt_file>") # generate file.png
+```
 
 ### Issues to Fix
 Review of the histograms generated (my thanks to MD Weight) calls attention to a few issues with the histograms. 
@@ -34,7 +52,7 @@ Review of the histograms generated (my thanks to MD Weight) calls attention to a
 ### Test Files
 **data_1**  
 A text file with relatively few unique bigrams.
-```{r}
+```{r, eval=F}
 # create vector of five bigrams
 words <- c("and; AND", "or, Or", "if... iF", "1he, 1he", "wh'en, wh'en", "why, why", 
            "where, wheRe", "how - how?", "who? Who!", "what, what")
@@ -48,7 +66,7 @@ writeLines(words, "data_1.txt")
 
 **data_2**  
 A list of 1000 words with 100 unique values, sorted by character length but not alphabetized.
-```{r}
+```{r, eval=F}
 # Obtain a sample of vocabulary words
 vocab <- readLines("https://archive.ics.uci.edu/ml/machine-learning-databases/bag-of-words/vocab.pubmed.txt")
 
@@ -70,7 +88,7 @@ writeLines(words, "data_2.txt")
 
 **data_3**  
 English words.
-```{r}
+```{r, eval=F}
 # Download a sample of unique vocabulary words
 vocab <- readLines("https://github.com/dwyl/english-words/blob/master/words.txt?raw=true")
 # randomly select 10,000
@@ -81,7 +99,7 @@ writeLines(paste(vocab, collapse = " "), "data_3.txt")
 
 ### Test results
 The following bash code tests each of the two scripts with each of the three datasets:
-```{r, engine="bash", eval=T}
+```{r, engine="bash", eval=F}
 # run bigram.R on data_1
 Rscript bigram.R data_1.txt
 
