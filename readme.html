@@ -154,11 +154,9 @@ bigram(&quot;&lt;file.name.txt&gt;&quot;) # generate file.png</code></pre>
 <h3>Issues to Fix</h3>
 <p><strong>Histogram issues</strong><br />
 <em>Review of the histograms generated (my thanks to MD Weight) calls attention to a few issues with the histograms.</em><br />
-* <strong>The sum of the histogram’s bars ought to be equal to 1</strong>. This requires a normalization of the data (ie. divide each tally by the total number of bigrams) prior to calling the plot function, similar to a probability of mass distribution.<br />
 * <strong>A key is required for an understandable plot</strong>.<br />
-+ <strong>The difficulty</strong>: there are limits to what a histogram can convey when it is supposed to be able to model any text file. For example, when there are ten bigrams in the file, the histogram can assign each one its own place on the X axis, but when there are a thousand, they need to be bucketed somehow.<br />
-+ <strong>The solution</strong>: Bucket bigrams according to the percentage with which they occur or their place in the alphabet, and provide a descriptive key for the buckets.<br />
-* <strong>Bigrams with a tally of 1 take up unnecessary space</strong>. “When a bigram count falls below the threshold t, the bigram is backed-off to the unigram probability suitably scaled by a back-off weight in order to ensure that all bigram probabilities for a given history sum to one.” - <a href="https://labrosa.ee.columbia.edu/doc/HTKBook21/node132.html">Bigram Language Models</a>.<br />
+* + <strong>The difficulty</strong>: there are limits to what a histogram can convey when it is supposed to be able to model any text file. For example, when there are ten bigrams in the file, the histogram can assign each one its own place on the X axis, but when there are a thousand, they need to be bucketed somehow.<br />
+* + <strong>The solution</strong>: Bucket bigrams according to the percentage with which they occur or their place in the alphabet, and provide a descriptive key for the buckets.<br />
 * <strong>Raw counts create polarized plot data</strong>. Plotting by the log of the counts allows more to be inferred about the shape of the dataset.</p>
 </div>
 <div id="test-files" class="section level3">

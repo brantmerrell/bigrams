@@ -6,7 +6,7 @@ import string
 import sys
 import getopt
 import matplotlib.pyplot as plt
-def bigram(txt_file):
+def bigram(txt_file, threshold = 0):
     """Create histogram of bigrams from txt_file"""
     # read file
     file_connection = open(txt_file, "r") # open
@@ -29,8 +29,11 @@ def bigram(txt_file):
     for ndx_i in range(1, len(words)):
         bigrams.append(" ".join([words[ndx_i-1],words[ndx_i]]))
     
-    # count occurrences of bigrams
+    # Obtain tallies for the unique bigrams 
     bigrams = collections.Counter(bigrams)
+
+    # eliminate bigrams that fall below threshold
+    { k:v for k, v in bigrams.items() if threshold <= v }
 
     # create png file named the same as the txt file
     if not os.path.isdir("gallery"):
