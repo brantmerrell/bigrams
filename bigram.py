@@ -38,10 +38,10 @@ def bigram(txt_file):
     png_file = "_".join(["gallery/py",re.sub("txt$", "png", txt_file)])
 
     # create histogram
-    plt.hist(bigrams.values(), color="green")
+    plt.hist(bigrams.values(), color="green", density=True)
     plt.title(" ".join(["Histogram of bigrams in", txt_file, "- python"]))
-    plt.xlabel("Tally of bigrams")
-    plt.ylabel("Frequency of tallies")
+    plt.xlabel("Tallies")
+    plt.ylabel("Probability Density")
     plt.savefig(png_file)
 
     # print name of png file

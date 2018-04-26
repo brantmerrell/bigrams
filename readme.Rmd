@@ -15,7 +15,7 @@ A bigram is any two adjacent words in the text. A histogram is a kind of graphic
 A well-formed submission will be executable and accompanied by tests. You may do this in any language and use any framework or data structures to read files, build the output, and run tests. The submission should be your own work. Great candidates go above and beyond the problem statement and think about edge cases and failure.
 
 ### Approach
-To catch discrepancies in results and thus reduce error, I have written an R function (bigram.R) and a python function (bigram.py). Both functions process three test files as shown below.
+To catch discrepancies in results and thus reduce error, I have written an R function (bigram.R) and a python function (bigram.py). Both functions process three test files as shown below. I have chosen R (app.R) for running a displayable application.
 
 ### Executability
 An R shiny application is available at [https://brantmerrell.shinyapps.io/programming_exercise/](https://brantmerrell.shinyapps.io/programming_exercise/), which allows users to manually upload one txt file at a time and view the resulting histogram of bigrams. The shiny application can also be run from the R console:  
@@ -26,8 +26,8 @@ runApp()
 Additionally, the R and python functions create histograms in a *gallery* directory when called from the bash command line or from their respective terminals:
 ```{r, engine="bash", eval=F}
 # Bash sommand line
-Rscript bigram.R <file_name.txt>
-python bigram.py <file_name.txt>
+Rscript bigram.R "<file_name.txt>"
+python bigram.py "<file_name.txt>"
 ```
 ```{r, eval=F}
 # R terminal
@@ -37,12 +37,12 @@ bigram("<file_name.txt>")
 ```{r, engine="python", eval=F}
 # Python terminal
 from bigram import bigram # import function in python
-bigram("<txt_file>") # generate file.png
+bigram("<file.name.txt>") # generate file.png
 ```
 
 ### Issues to Fix
-Review of the histograms generated (my thanks to MD Weight) calls attention to a few issues with the histograms. 
- * __The sum of the histogram's bars ought to be equal to 1__. This requires a normalization of the data (ie. divide each tally by the total number of bigrams) prior to calling the plot function, similar to a probability of mass distribution.  
+**Histogram issues**  
+*Review of the histograms generated (my thanks to MD Weight) calls attention to a few issues with the histograms.*  
  *   __A key is required for an understandable plot__.  
   +   __The difficulty__: there are limits to what a histogram can convey when it is supposed to be able to model any text file. For example, when there are ten bigrams in the file, the histogram can assign each one its own place on the X axis, but when there are a thousand, they need to be bucketed somehow.  
   +   __The solution__: Bucket bigrams according to the percentage with which they occur or their place in the alphabet, and provide a descriptive key for the buckets.  
@@ -99,24 +99,24 @@ writeLines(paste(vocab, collapse = " "), "data_3.txt")
 
 ### Test results
 The following bash code tests each of the two scripts with each of the three datasets:
-```{r, engine="bash", eval=F}
+```{r, engine="bash", eval=T}
 # run bigram.R on data_1
-Rscript bigram.R data_1.txt
+Rscript bigram.R "data_1.txt"
 
 # run bigram.py on data_1
-python bigram.py data_1.txt
+python bigram.py "data_1.txt"
 
 # run bigram.R on data_2
-Rscript bigram.R data_2.txt
+Rscript bigram.R "data_2.txt"
 
 # run bigram.py on data_2
-python bigram.py data_2.txt
+python bigram.py "data_2.txt"
 
 # run bigram.R on data_3
-Rscript bigram.R data_3.txt
+Rscript bigram.R "data_3.txt"
 
 # run bigram.py on data_2
-python bigram.py data_3.txt
+python bigram.py "data_3.txt"
 ```
 
 

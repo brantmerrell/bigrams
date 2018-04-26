@@ -1,5 +1,5 @@
-# txtFile <- "data_3.txt"
-bigram <- function(txtFile){
+# txtFile <- "data_1.txt"
+bigram <- function(txtFile, output="png", threshold=0){
   # read file
   words <- readLines(txtFile)
   
@@ -20,29 +20,38 @@ bigram <- function(txtFile){
     bigrams <- c(bigrams,
                  paste(words[n-1], words[n]))
   }
-
+  
+  # Obtain tallies for the unique bigrams 
   bigrams <- table(bigrams)
   
-  # create png file named the same as the txt file
-  if(!dir.exists("gallery")) dir.create("gallery")
-  pngFile <- file.path("gallery", paste("R",gsub("txt$","png",txtFile), sep = "_"))
+  # eliminate bigrams that fall below threshold
+  bigrams <- bigrams[threshold <= bigrams]
   
-  # open connection to png file
-  png(pngFile)
+  if(output=="png") {
+    # create png file named the same as the txt file
+    if(!dir.exists("gallery")) dir.create("gallery")
+    pngFile <- file.path("gallery", paste("R",gsub("txt$","png",txtFile), sep = "_"))
+
+    # open connection to png file
+    png(pngFile)
+  }
   
   # create histogram of bigrams
   hist(matrix(bigrams),
-       main = paste("Histogram of bigrams in", txtFile, "- R"),
-       xlab = "Tally of bigrams",
-       ylab = "Frequency of tallies",
+       freq = F, # Set freq at F for probability densities
+       main = paste("Histogram of bigrams in", txtFile, "- R"), # include input and "R" (distinguish from py script)
+       xlab = "Tallies",
+       ylab = "Probability Density",
        border = "blue",
        col = "green")
   
   # close connection to png file
-  dev.off()
+  if(output=="png") {
+    dev.off()
+    # print name of png file
+    print(pngFile)
+  }
   
-  # print name of png file
-  print(pngFile)
 }
 
 ARGS <- commandArgs()[6]
