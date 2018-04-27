@@ -18,7 +18,7 @@ A well-formed submission will be executable and accompanied by tests. You may do
 To catch discrepancies in results and thus reduce error, I have written an R function (bigram.R) and a python function (bigram.py). Both functions process three test files as shown below. I have chosen R (app.R) for running a displayable application.
 
 ### Executability
-An R shiny application is available at [https://brantmerrell.shinyapps.io/programming_exercise/](https://brantmerrell.shinyapps.io/programming_exercise/), which allows users to manually upload one txt file at a time and view the resulting histogram of bigrams. The shiny application can also be run from the R console:  
+An R shiny application is available at [https://brantmerrell.shinyapps.io/bigrams/](https://brantmerrell.shinyapps.io/bigrams/), which allows users to manually upload one txt file at a time and view the resulting histogram of bigrams. The shiny application can also be run from the R console:  
 ```{r, eval=F}
 library(shiny)
 runApp()
