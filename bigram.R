@@ -1,5 +1,5 @@
-# txtFile <- "data_1.txt"
-bigram <- function(txtFile, output="png", threshold=0){
+# txtFile <- "data_2.txt"
+bigram <- function(txtFile, output="png", borderColor = "darkred", barColor = "royalblue", threshold=0){
   # read file
   words <- readLines(txtFile)
   
@@ -26,7 +26,30 @@ bigram <- function(txtFile, output="png", threshold=0){
   
   # eliminate bigrams that fall below threshold
   bigrams <- bigrams[threshold <= bigrams]
+  # convert to data frame for bucketing
+  bigrams <- data.frame(bgrm = row.names(bigrams), tally = matrix(bigrams),
+                        # begin alphabin as ":other:" because other categories are later added
+                        alphabin = ":other:",
+                        # avoid factors for compatibility with alphabetic bucketing
+                        stringsAsFactors = F)
   
+  bigrams <- bigrams[order(bigrams$tally, decreasing = T),]
+  
+  # seq to 26+1 because bucketing without overlap requires tempSeq[n]-1
+  # buckets are between seq values but category "other" exists, so length.out = #(buckets) + 1 - 1
+  tempSeq <- round(seq(1, 27, length.out = 5)) 
+  # iterate through ranges of alphabet to bucket alphabetically
+  for(n in seq(tempSeq)[-1]){
+    # define pattern to match first character of bigram if within range of letters
+    tempPattern <- paste(c("^[", letters[tempSeq[n-1]:(tempSeq[n]-1)],"]"), collapse = "")
+    # match rows that follow pattern, and modify column "alphabin"
+    bigrams[grepl(tempPattern, bigrams$bgrm, ignore.case = T),"alphabin"] <- 
+      # string together first and last letter in range to insert into bigrams[<subset>,"alphabin]
+      paste(LETTERS[c(tempSeq[n-1], tempSeq[n]-1)], collapse = "-")
+  }
+  
+  DF <- aggregate(bigrams$tally, list(bigrams$alphabin), FUN=sum)
+  DF <- DF[order(DF$x),]
   if(output=="png") {
     # create png file named the same as the txt file
     if(!dir.exists("gallery")) dir.create("gallery")
@@ -35,15 +58,27 @@ bigram <- function(txtFile, output="png", threshold=0){
     # open connection to png file
     png(pngFile)
   }
-  
-  # create histogram of bigrams
-  hist(matrix(bigrams),
-       freq = F, # Set freq at F for probability densities
-       main = paste("Histogram of bigrams in", txtFile, "- R"), # include input and "R" (distinguish from py script)
-       xlab = "Tallies",
-       ylab = "Probability Density",
-       border = "blue",
-       col = "green")
+  COLS <- colors(T)
+  tempSeq <- seq(1, nrow(bigrams), length.out = 6)
+  par(mfcol=c(2,2))
+  hist(matrix(bigrams$tally),
+       # Set freq at F for probability densities
+       freq = F,
+       # display txtFile unless it is located in a temp folder - then abbreviate to temp.txt
+       main = paste("Histogram for", ifelse(grepl("tmp/",txtFile), "tmp.txt", txtFile), 
+                    # display programming language that generated output
+                    "- R"), 
+       # name X & Y axes
+       xlab = "", ylab = "Bigram Probability Density",
+       # set bar & border colors
+       border = borderColor, 
+       col = sample(COLS[grepl("blue",COLS)]))
+  barplot(head(bigrams$tally), names.arg = head(bigrams$bgrm), main = "Highest Frequency", 
+          xlab = "", ylab = "Bigram Count", horiz = F, las=2, col = sample(COLS[grepl("red",COLS)], nrow(head(bigrams))))
+  barplot(DF$x, names.arg = DF$Group.1,  main = "Alphabetic Buckets", 
+          xlab = "", ylab = "Bigram Count", col = sample(COLS[grepl("green",COLS)], nrow(DF)))
+  barplot(log(bigrams[tempSeq,"tally"]), names.arg = bigrams[tempSeq,"bgrm"], main = "Log of Examples", 
+          xlab = "", ylab = "Log of Bigram Count", horiz = F, las=2, col = sample(COLS[grepl("gray",COLS)], length(tempSeq)))
   
   # close connection to png file
   if(output=="png") {

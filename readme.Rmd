@@ -40,13 +40,12 @@ from bigram import bigram # import function in python
 bigram("<file.name.txt>") # generate file.png
 ```
 
-### Issues to Fix
-**Histogram issues**  
-*Review of the histograms generated (my thanks to MD Weight) calls attention to a few issues with the histograms.*  
- *   __A key is required for an understandable plot__.  
- *  +   __The difficulty__: there are limits to what a histogram can convey when it is supposed to be able to model any text file. For example, when there are ten bigrams in the file, the histogram can assign each one its own place on the X axis, but when there are a thousand, they need to be bucketed somehow.  
- *  +   __The solution__: Bucket bigrams according to the percentage with which they occur or their place in the alphabet, and provide a descriptive key for the buckets.  
- * __Raw counts create polarized plot data__. Plotting by the log of the counts allows more to be inferred about the shape of the dataset.
+### Issues to Fix or Discuss
+ * _Logs versus raw counts_  
+ * _Probability density versus frequency_  
+ * _Alphabetized bins versus other methods of aggregation_
+ * __Add numeric values above bars__
+ * __Increase font size for x axes__
 
 ### Test Files
 **data_1**  

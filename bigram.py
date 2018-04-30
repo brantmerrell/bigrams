@@ -41,7 +41,7 @@ def bigram(txt_file, threshold = 0):
     png_file = "_".join(["gallery/py",re.sub("txt$", "png", txt_file)])
 
     # create histogram
-    plt.hist(bigrams.values(), color="green", density=True)
+    plt.hist(bigrams.values(), color="blue", density=True)
     plt.title(" ".join(["Histogram of bigrams in", txt_file, "- python"]))
     plt.xlabel("Tallies")
     plt.ylabel("Probability Density")
