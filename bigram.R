@@ -53,7 +53,7 @@ bigram <- function(txtFile, output="png", borderColor = "darkred", barColor = "r
   if(output=="png") {
     # create png file named the same as the txt file
     if(!dir.exists("gallery")) dir.create("gallery")
-    pngFile <- file.path("gallery", paste("R",gsub("txt$","png",txtFile), sep = "_"))
+    pngFile <- file.path("gallery", paste("R",gsub(".{4}$",".png",txtFile), sep = "_"))
 
     # open connection to png file
     png(pngFile)
@@ -61,7 +61,7 @@ bigram <- function(txtFile, output="png", borderColor = "darkred", barColor = "r
   COLS <- colors(T)
   tempSeq <- seq(1, nrow(bigrams), length.out = 6)
   par(mfcol=c(2,2))
-  hist(matrix(bigrams$tally),
+  hist(bigrams$tally,
        # Set freq at F for probability densities
        freq = F,
        # display txtFile unless it is located in a temp folder - then abbreviate to temp.txt
@@ -73,13 +73,17 @@ bigram <- function(txtFile, output="png", borderColor = "darkred", barColor = "r
        # set bar & border colors
        border = borderColor, 
        col = sample(COLS[grepl("blue",COLS)]))
-  barplot(head(bigrams$tally), names.arg = head(bigrams$bgrm), main = "Highest Frequency", 
-          xlab = "", ylab = "Bigram Count", horiz = F, las=2, col = sample(COLS[grepl("red",COLS)], nrow(head(bigrams))))
-  barplot(DF$x, names.arg = DF$Group.1,  main = "Alphabetic Buckets", 
-          xlab = "", ylab = "Bigram Count", col = sample(COLS[grepl("green",COLS)], nrow(DF)))
-  barplot(log(bigrams[tempSeq,"tally"]), names.arg = bigrams[tempSeq,"bgrm"], main = "Log of Examples", 
-          xlab = "", ylab = "Log of Bigram Count", horiz = F, las=2, col = sample(COLS[grepl("gray",COLS)], length(tempSeq)))
   
+  bplt <- barplot(head(bigrams$tally), names.arg = head(bigrams$bgrm), main = "Highest Frequency",
+          xlab = "", ylab = "Bigram Count", horiz = F, las=2, col = sample(COLS[grepl("red",COLS)], nrow(head(bigrams))))
+  text(bplt, head(bigrams$tally), head(bigrams$tally), pos = 1)
+  bplt <- barplot(DF$x, names.arg = DF$Group.1,  main = "Alphabetic Buckets", xlab = "", 
+                  ylab = "Bigram Count", col = sample(COLS[grepl("green",COLS)], nrow(DF)))
+  text(bplt, DF$x, DF$x, pos = 1)
+  bplt <- barplot(log(bigrams[tempSeq,"tally"]), names.arg = bigrams[tempSeq,"bgrm"], 
+                  main = "Log of Examples", xlab = "", ylab = "Log of Bigram Count", horiz = F, 
+                  las=2, col = sample(COLS[grepl("gray",COLS)], length(tempSeq)))
+  text(bplt, log(bigrams[tempSeq,"tally"]), round(log(bigrams[tempSeq,"tally"]),1), pos = 1, col = "royalblue")
   # close connection to png file
   if(output=="png") {
     dev.off()
